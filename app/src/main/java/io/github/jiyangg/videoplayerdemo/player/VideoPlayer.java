@@ -58,7 +58,9 @@ public class VideoPlayer {
         if (videoThread != null) videoThread.interrupt();
     }
 
-    //将缓冲区传递至解码器
+    /*将缓冲区传递至解码器
+    * 如果到了文件末尾，返回true;否则返回false
+    */
     private boolean putBufferToCoder(MediaExtractor extractor, MediaCodec decoder, ByteBuffer[] inputBuffers) {
         boolean isMediaEOS = false;
         int inputBufferIndex = decoder.dequeueInputBuffer(TIMEOUT_US);
@@ -80,8 +82,7 @@ public class VideoPlayer {
     //获取指定类型媒体文件所在轨道
     private int getMediaTrackIndex(MediaExtractor videoExtractor, String MEDIA_TYPE) {
         int trackIndex = -1;
-        for (int i = 0; i < videoExtractor.getTrackCount(); i++) {
-            //获取视频所在轨道
+        for (int i = 0; i < videoExtractor.getTrackCount(); i++) {          
             MediaFormat mediaFormat = videoExtractor.getTrackFormat(i);
             String mime = mediaFormat.getString(MediaFormat.KEY_MIME);
             if (mime.startsWith(MEDIA_TYPE)) {
